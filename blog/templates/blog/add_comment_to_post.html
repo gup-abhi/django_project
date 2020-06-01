@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <fieldset class="form-group">
+            <legend class="border-bottom ab-4">Add Comment</legend>
+            <form method="POST" class="post-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" class="save btn btn-default">
+                    Send
+                </button>
+            </form>
+    </fieldset>
+{% endblock %}
