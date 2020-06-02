@@ -17,6 +17,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
 import environ
+import operator
+from django.db.models import Q
+from functools import reduce
 
 
 # Create your views here.
@@ -27,6 +30,24 @@ class PostListView(ListView):
     context_object_name = 'posts'
     ordering = ['-date_posted']
     paginate_by = 5
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            query_list = query.split()
+            post_list = Post.objects.filter(
+                reduce(operator.and_,
+                       (Q(title__icontains=q) for q in query_list)) |
+                reduce(operator.and_,
+                       (Q(content__icontains=q) for q in query_list))
+            ).order_by('-date_posted')
+        else:
+            post_list = Post.objects.all().order_by('-date_posted')
+        return post_list
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class UserPostListView(ListView):
