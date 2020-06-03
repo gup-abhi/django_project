@@ -1,4 +1,5 @@
 {% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <article class="media content-section p-3">
     <img src="{{ object.author.profile.image.url }}" class="rounded-circle article-img">
@@ -19,9 +20,6 @@
         </div>
     </div>
 </article>
-<div class="btn">
-    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
-</div>
 <article class="media content-section pt-3">
     <div class="media-body p-3">
         {% for comment in post.comments.all %}
@@ -39,23 +37,37 @@
                                 class="glyphicon glyphicon-ok">Approve</span></a>
                     </div>
                 </article>
-                {% endif %}
-                {% if comment.approved_comment %}
+            {% endif %}
+            {% if comment.approved_comment %}
                 <article class="media content-section">
                     <div class="container-fluid p-3">
                         <strong>{{ comment.author }}</strong>
                         <small class="text-muted">{{ comment.related_date | date:"F d, Y" }}</small>
                         <p>{{ comment.text|linebreaks }}</p>
-                        {%  if comment.author == user %}
-                        <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'comment_delete' pk=comment.pk %}"><span
+                        {% if comment.author == user %}
+                            <a class="btn btn-outline-danger btn-sm mt-1 mb-1" href="{% url 'comment_delete' pk=comment.pk %}"><span
                                 class="glyphicon glyphicon-ok">Delete</span></a>
                         {% endif %}
                     </div>
                 </article>
-                {% endif %}
+            {% endif %}
         {% empty %}
         <p>No comments here yet :(</p>
         {% endfor %}
+    </div>
+</article>
+<article class="media content-section p-3">
+    <div class="container-fluid p-3">
+        <fieldset class="form-group">
+            <legend class="border-bottom ab-4">Add Comment</legend>
+            <form method="POST" class="post-form">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" class="save btn btn-default">
+                    Send
+                </button>
+            </form>
+        </fieldset>
     </div>
 </article>
 {% endblock content %}

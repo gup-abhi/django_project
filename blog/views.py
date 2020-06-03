@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.views.generic import (
@@ -13,7 +13,6 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin,
 )
 from .forms import CommentForm, PostCreateForm, PostUpdateForm, ContactForm
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.mail import send_mail
 import environ
@@ -61,14 +60,21 @@ class UserPostListView(ListView):
         return Post.objects.filter(author=user).order_by('-date_posted')
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
+    form_class = CommentForm
+    template_name = 'blog/post_detail.html'
 
+    def get_success_url(self, *args, **kwargs):
+        return redirect('post-detail', pk=self.kwargs['pk'])
 
-@login_required
-def add_comment_to_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -77,9 +83,6 @@ def add_comment_to_post(request, pk):
             comment.save()
             messages.success(request, f'Successfully commented on the post. Waiting for approval from author!')
             return redirect('post-detail', pk=post.pk)
-    else:
-        form = CommentForm()
-    return render(request, 'blog/add_comment_to_post.html', {'form': form})
 
 
 def comment_approve(request, pk):
