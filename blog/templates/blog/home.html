@@ -1,5 +1,11 @@
 {% extends 'blog/base.html' %}
 {% block content %}
+<div class="container" id="search">
+    <form class="form-group">
+        <input class="form-control" action="{% url 'blog-home' %}" method="GET" type="search"
+               placeholder="Search Posts" aria-label="Search" name="q">
+    </form>
+</div>
 {% for post in posts %}
 <article class="media content-section">
     <img src="{{ post.author.profile.image.url }}" class="rounded-circle article-img">
