@@ -1,6 +1,6 @@
 certifi==2018.10.15
 chardet==3.0.4
-Django==2.2.1
+Django==2.2.20
 django-crispy-forms==1.7.2
 django-summernote==0.8.11.6
 idna==2.7
