@@ -5,7 +5,7 @@ __pycache__
 db.sqlite3
 .DS_Store
 .env
-static/admin
-static/blog
-static/summernote
+# static/admin
+# static/blog
+# static/summernote
 media
