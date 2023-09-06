@@ -30,7 +30,7 @@ SECRET_KEY = '4frje8s1thfeep1y=0kghb672w9a$39w&yk1kx+tdpp)=#esap'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [52.41.36.82, 54.191.253.12, 44.226.122.3]
 
 # Application definition
 
