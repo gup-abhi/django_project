@@ -1,5 +1,4 @@
 asgiref==3.7.2
-bleach==6.1.0
 crispy-bootstrap4==2023.1
 crispy-bootstrap5==0.7
 dj-database-url==2.1.0
