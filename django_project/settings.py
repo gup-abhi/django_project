@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import environ
+import dj_database_url
 
 env = environ.Env()
 
@@ -30,7 +31,7 @@ SECRET_KEY = '4frje8s1thfeep1y=0kghb672w9a$39w&yk1kx+tdpp)=#esap'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'django-blog-oclq.onrender.com', '52.41.36.82', '54.191.253.12', '44.226.122.3']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-blog-oclq.onrender.com', '52.41.36.82', '54.191.253.12', '44.226.122.3']
 
 # Application definition
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'users.apps.UsersConfig',
     'django_summernote',
+    'crispy_bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -81,10 +83,15 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    # 'default': {
+    #     'ENGINE': "django.db.backends.postgresql_psycopg2",
+    #     "NAME": 'my_db',
+    #     "USER": 'hero',
+    #     'PASSWORD': "my_db@123",
+    #     "HOST": "localhost",
+    #     "PORT": '5432',
+    # }
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
 # Password validation
